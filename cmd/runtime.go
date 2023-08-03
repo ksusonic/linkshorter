@@ -13,8 +13,11 @@ import (
 
 func runtime(address string, handler http.Handler) {
 	srv := &http.Server{
-		Addr:    address,
-		Handler: handler,
+		Addr:           address,
+		Handler:        handler,
+		ReadTimeout:    10 * time.Second,
+		WriteTimeout:   10 * time.Second,
+		MaxHeaderBytes: 1 << 20,
 	}
 
 	go func() {

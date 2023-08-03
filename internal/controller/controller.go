@@ -64,5 +64,6 @@ func (c *Controller) Redirect(ctx *gin.Context) {
 		return
 	}
 
+	ctx.Header("Location", ctx.Request.RequestURI)
 	ctx.Redirect(http.StatusTemporaryRedirect, link)
 }
