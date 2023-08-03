@@ -3,6 +3,7 @@ package controller
 import (
 	"context"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 
@@ -23,14 +24,16 @@ func NewUrlController(storage Storage) *Controller {
 }
 
 func (c *Controller) Shorten(ctx *gin.Context) {
-	var body Shorten
-	if err := ctx.BindJSON(&body); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"msg": err.Error()})
+	all, err := io.ReadAll(ctx.Request.Body)
+	if err != nil {
+		_ = ctx.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
-	url, err := checkNormalizeUrl(body.Link)
+	link := string(all)
+
+	url, err := checkNormalizeUrl(link)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"msg": fmt.Sprintf("incorrect url: %s - %v", body.Link, err)})
+		ctx.JSON(http.StatusBadRequest, gin.H{"msg": fmt.Sprintf("incorrect url: %s - %v", link, err)})
 		return
 	}
 	hash, err := hashUrl(url)
@@ -44,11 +47,21 @@ func (c *Controller) Shorten(ctx *gin.Context) {
 		log.Printf("got error: %v", err)
 		return
 	}
+
+	result := ctx.Request.URL
+	result.Path = hash
 	ctx.Status(http.StatusCreated)
+	_, err = ctx.Writer.Write([]byte(result.String()))
+	if err != nil {
+		log.Printf("%v", err)
+	}
 }
 
 func (c *Controller) Redirect(ctx *gin.Context) {
-	var redirect Redirect
+	var redirect struct {
+		ID string `uri:"id"`
+	}
+
 	if err := ctx.BindUri(&redirect); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"msg": err})
 		return

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/ksusonic/linkshorter/frontend"
 	"github.com/ksusonic/linkshorter/internal/config"
 	"github.com/ksusonic/linkshorter/internal/controller"
 	"github.com/ksusonic/linkshorter/internal/server"
@@ -13,16 +14,20 @@ func main() {
 	db := ydb.NewDatabase(cfg.DatabaseDsn)
 	defer func() { _ = db.Close() }()
 
-	srv := server.NewServer()
+	router := server.NewServer()
 
+	// backend
 	{
-		api := srv.Group("/api")
 		urlController := controller.NewUrlController(db)
 
-		api.POST("/shorten", urlController.Shorten)
-		api.GET("/redirect/:id", urlController.Redirect)
+		router.POST("/shorten", urlController.Shorten)
+		router.GET("/:id", urlController.Redirect)
+
+		// frontend
+		router.LoadHTMLFiles(frontend.Templates...)
+		router.GET("/", frontend.Index)
 	}
 
 	// entrypoint
-	runtime(cfg.Address, srv)
+	runtime(cfg.Address, router)
 }
