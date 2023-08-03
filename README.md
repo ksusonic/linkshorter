@@ -1,3 +1,5 @@
 # Url shortener service
 
-is in dev
+Stack:
+- Gin-gonic
+- YDB

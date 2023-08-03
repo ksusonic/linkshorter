@@ -13,18 +13,18 @@ type Database struct {
 	logger *log.Logger
 }
 
-func NewDatabase(ctx context.Context, dsn string, logger *log.Logger) *Database {
+func NewDatabase(dsn string) *Database {
+	ctx := context.Background()
 	db, err := sdk.Open(ctx, dsn, environ.WithEnvironCredentials(ctx))
 	if err != nil {
 		panic(err)
 	}
 
 	return &Database{
-		db:     db,
-		logger: logger,
+		db: db,
 	}
 }
 
-func (d *Database) Close(ctx context.Context) error {
-	return d.db.Close(ctx)
+func (d *Database) Close() error {
+	return d.db.Close(context.Background())
 }

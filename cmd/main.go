@@ -1,9 +1,6 @@
 package main
 
 import (
-	"context"
-	"log"
-
 	"github.com/ksusonic/linkshorter/internal/config"
 	"github.com/ksusonic/linkshorter/internal/controller"
 	"github.com/ksusonic/linkshorter/internal/server"
@@ -11,11 +8,10 @@ import (
 )
 
 func main() {
-	ctx := context.Background()
 	cfg := config.NewConfig()
 
-	db := ydb.NewDatabase(ctx, cfg.DatabaseDsn, &log.Logger{})
-	defer func() { _ = db.Close(ctx) }()
+	db := ydb.NewDatabase(cfg.DatabaseDsn)
+	defer func() { _ = db.Close() }()
 
 	srv := server.NewServer()
 
@@ -27,7 +23,6 @@ func main() {
 		api.GET("/redirect/:id", urlController.Redirect)
 	}
 
-	if err := srv.Run(cfg.Address); err != nil {
-		return
-	}
+	// entrypoint
+	runtime(cfg.Address, srv)
 }
