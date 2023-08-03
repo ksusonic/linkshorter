@@ -15,7 +15,7 @@ const (
 	selectQuery = `DECLARE $id AS String;
 		SELECT link FROM links WHERE id = $id LIMIT 1;`
 	insertQuery = `DECLARE $id AS String; DECLARE $link AS String;
-		INSERT INTO links (id, link) VALUES ($id, $link);`
+		REPLACE INTO links (id, link) VALUES ($id, $link);`
 )
 
 func (d *Database) GetLink(ctx context.Context, id string) (string, error) {
