@@ -16,8 +16,8 @@ func main() {
 
 	router := server.NewServer()
 
-	// backend
 	{
+		// backend
 		urlController := controller.NewUrlController(db)
 
 		router.POST("/shorten", urlController.Shorten)
