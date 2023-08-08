@@ -1,7 +1,6 @@
 FROM golang:latest
 RUN mkdir /app
 
-ENV GO111MODULE=on
 ADD . /app/
 WORKDIR /app
 
