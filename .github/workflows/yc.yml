@@ -36,7 +36,7 @@ jobs:
           yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
           folder-id: b1ggriejpfppr7ui7grq
           vm-name: linkshorter
-          vm-service-account-id: ajemmb0q6mmktng0pak9
+          vm-service-account-id: ajepe98i2v73ui6rub7o
           vm-cores: 2
           vm-memory: 2Gb
           vm-core-fraction: 20
