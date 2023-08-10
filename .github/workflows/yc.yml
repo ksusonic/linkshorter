@@ -41,5 +41,4 @@ jobs:
           vm-memory: 2Gb
           vm-core-fraction: 20
           vm-subnet-id: e2lo6e5bj7cu83k3n4df
-          user-data-path: './user-data.yaml'
-          docker-compose-path: './docker-compose.yaml'
+          docker-container-declaration: ${{ secrets.DOCKER_CONTAINER_DECLARATION }}
