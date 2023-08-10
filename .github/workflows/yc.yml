@@ -18,18 +18,18 @@ jobs:
 
       - name: Build, tag, and push image to Yandex Cloud Container Registry
         env:
-          CR_REGISTRY: cr.yandex/crpbc6dfqke0h2ataotm
+          CR_REGISTRY: crpbc6dfqke0h2ataotm
           CR_REPOSITORY: linkshorter
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build . --file Dockerfile --tag cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
+          docker build -t cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG .
           docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
 
       - name: Deploy COI VM
         id: deploy-coi
         uses: yc-actions/yc-coi-deploy@v2
         env:
-          CR_REGISTRY: cr.yandex/crpbc6dfqke0h2ataotm
+          CR_REGISTRY: crpbc6dfqke0h2ataotm
           CR_REPOSITORY: linkshorter
           IMAGE_TAG: ${{ github.sha }}
         with:
