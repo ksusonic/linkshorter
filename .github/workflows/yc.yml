@@ -24,21 +24,3 @@ jobs:
         run: |
           docker build -t cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG .
           docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
-
-      - name: Deploy COI VM
-        id: deploy-coi
-        uses: yc-actions/yc-coi-deploy@v2
-        env:
-          CR_REGISTRY: crpbc6dfqke0h2ataotm
-          CR_REPOSITORY: linkshorter
-          IMAGE_TAG: ${{ github.sha }}
-        with:
-          yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
-          folder-id: b1ggriejpfppr7ui7grq
-          vm-name: linkshorter
-          vm-service-account-id: ajepe98i2v73ui6rub7o
-          vm-cores: 2
-          vm-memory: 2Gb
-          vm-core-fraction: 20
-          vm-subnet-id: e2lo6e5bj7cu83k3n4df
-          docker-container-declaration: ${{ secrets.DOCKER_CONTAINER_DECLARATION }}
